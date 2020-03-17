@@ -1,0 +1,82 @@
+package main
+/*
+This program analizes a string and return the consonant or group of consonants (if they are together) with the highest value.
+We ignore the vowels.
+*/
+import (
+	"fmt"
+	"strings"
+)
+var vowels string = "aeiou"
+var isOneVowel bool
+var m = map[string]int{  //We create a map with all the consonants and their values.
+	"b": 2,
+	"c": 3,
+	"d": 4,
+	"f": 6,
+	"g": 7,
+	"h": 8,
+	"j": 10,
+	"k": 11,
+	"l": 12,
+	"m": 13,
+	"n": 14,
+	"p": 16,
+	"q": 17,
+	"r": 18,
+	"s": 19,
+	"t": 20,
+	"v": 22,
+	"w": 23,
+	"x": 24,
+	"y": 25,
+	"z": 26,
+}
+func main() {
+	word := "Luis Anguera" //Here you can set the string to test.
+	calculateConsonants(word)
+}
+func calculateConsonants(word string) {
+	minusWord := strings.ToLower(word) //First of all, we convert all the string in lowercase
+	var name []string
+	for i := 0; i < len(minusWord); i++ {
+		isOneVowel = false 
+		chr := string(minusWord[i])
+		isVowel(chr)
+		if isOneVowel == false {
+			name = append(name, chr)
+		} else {
+			name = append(name, " ")
+		}
+	}
+	copy := strings.Join(name, "")
+	consonants := strings.Fields(copy) //We separate the string for every space.
+	var maxConsonant int
+	var indexConsonant int
+	for i := 0; i < len(consonants); i++ {
+		fmt.Println(consonants[i]+"->", solveValue(consonants[i]))
+		if maxConsonant < solveValue(consonants[i]) {
+			maxConsonant = solveValue(consonants[i])
+			indexConsonant = i //We save the index of the array, with the highest value consonant
+		}
+	}
+	fmt.Println("The result is: ", consonants[indexConsonant], " with", maxConsonant, "value")
+}
+func isVowel(letter string) bool {
+	if strings.ContainsAny(letter, vowels) {
+		isOneVowel = true
+	}
+	return isOneVowel
+}
+func solveValue(chr string) int {
+	var result int
+	chrs := strings.Split(chr, "")
+	for i := 0; i < len(chr); i++ {
+		strchr := chrs[i]
+		value, ok := m[strchr]
+		if ok {
+			result = result + value
+		}
+	}
+	return result
+}
